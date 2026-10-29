@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Authorization · Perfumaria Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="icon.png">
+</head>
+<body>
+<main>
+  <header>
+    <img src="icon.png" alt="Perfumaria Studio icon">
+    <h1>Perfumaria <span>Studio</span></h1>
+  </header>
+  <h2 id="title">Finishing authorization…</h2>
+  <p id="msg" class="muted">You will be sent back to Perfumaria Studio running on this computer.</p>
+</main>
+<script>
+  // TikTok redirects here (registered HTTPS redirect URI). The publishing tool runs locally and
+  // listens on 127.0.0.1; forward the authorization result to it. Nothing is stored on this site.
+  (function () {
+    var q = window.location.search;
+    var p = new URLSearchParams(q);
+    if (p.get("error")) {
+      document.getElementById("title").textContent = "Authorization was not granted.";
+      document.getElementById("msg").textContent = p.get("error_description") || p.get("error");
+      return;
+    }
+    if (!p.get("code")) {
+      document.getElementById("title").textContent = "Nothing to do here.";
+      document.getElementById("msg").textContent = "This page is only used during the TikTok authorization flow.";
+      return;
+    }
+    window.location.replace("http://127.0.0.1:8765/callback" + q);
+  })();
+</script>
+</body>
+</html>
